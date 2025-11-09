@@ -39,24 +39,16 @@ A modern, feature-rich blog platform built with vanilla PHP, HTML, CSS, and Java
    - Create a new database named `blog_website`
    - Import `setup_complete.sql`
 
-3. **Configure environment**
-   - Copy `backend/.env.example` to `backend/.env`
-   - Update database credentials in `.env`:
-     ```
-     DB_HOST=localhost
-     DB_USER=root
-     DB_PASS=your_password
-     DB_NAME=blog_website
-     ```
 
-4. **Set folder permissions**
+
+3. **Set folder permissions**
    ```bash
    chmod 755 uploads/
    chmod 755 uploads/profiles/
    ```
 
-5. **Access the application**
-   - Open `http://localhost/blogssite/frontend/index.html`
+4. **Access the application**
+   - Open `(https://zector.42web.io/Zector/frontend/index.html)`
    - Register a new account and start blogging!
 
 ## 📁 Project Structure
@@ -139,27 +131,10 @@ SESSION_PATH=/blogssite/
 - Profile photos: Max 2MB (JPG, PNG, GIF)
 - Post images: Max 5MB (JPG, PNG, GIF)
 
-## 🚀 Deployment
 
-See [HOSTING_GUIDE.md](HOSTING_GUIDE.md) for detailed deployment instructions.
 
-### Quick Steps
 
-1. Upload all files to your hosting server
-2. Update `backend/.env` with production credentials
-3. Import `setup_complete.sql` to your production database
-4. Set folder permissions for `uploads/` (755 or 777)
-5. Test registration and login
 
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
 
 ## 📝 License
 
@@ -167,7 +142,7 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ## 👨‍💻 Author
 
-Your Name - [GitHub Profile](https://github.com/yourusername)
+Your Name - [GitHub Profile](https://github.com/Nadeesha-Maduwantha)
 
 ## 🙏 Acknowledgments
 
@@ -175,10 +150,8 @@ Your Name - [GitHub Profile](https://github.com/yourusername)
 - No frameworks or libraries required
 - Modern UI design inspired by contemporary blog platforms
 
-## 📞 Support
 
-For support, email your.email@example.com or open an issue in this repository.
 
----
 
 **Happy Blogging! 📝✨**
+
