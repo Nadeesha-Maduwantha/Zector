@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Post - Zector</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h2>Zector</h2>
+            </div>
+            
+            <div class="nav-actions" style="margin-left: auto;">
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <a href="create_post.html" class="nav-btn nav-btn-create">Create Post</a>
+                <a href="account.html" class="user-avatar" id="userAvatar" title="My Account">
+                    <img id="avatarPhoto" src="" alt="" style="display: none;">
+                    <span id="avatarInitial">N</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="form-container">
+            <h1>Edit Post</h1>
+            
+            <div id="message" class="alert" style="display: none;"></div>
+            
+            <form id="editPostForm" enctype="multipart/form-data">
+                <input type="hidden" id="post_id" name="post_id">
+                <input type="hidden" id="current_image" name="current_image">
+                <input type="hidden" id="delete_image" name="delete_image" value="0">
+                
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" name="title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="content">Content</label>
+                    <textarea id="content" name="content" rows="10" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Current Image</label>
+                    <div id="currentImageContainer" style="display: none;">
+                        <img id="currentImagePreview" src="" alt="Current image" style="max-width: 300px; border-radius: 8px; margin: 10px 0;">
+                        <br>
+                        <button type="button" onclick="deleteCurrentImage()" class="btn btn-danger btn-small">Delete Image</button>
+                    </div>
+                    <div id="noImageMessage" style="display: none; color: #666; margin: 10px 0;">
+                        No image attached
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="image">Change Image (optional)</label>
+                    <input type="file" id="image" name="image" accept="image/*">
+                    <small>Supported formats: JPG, PNG, GIF (Max 5MB)</small>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Update Post</button>
+                    <a href="dashboard.html" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+    <script>
+        checkAuth();
+        
+        // Get post ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const postId = urlParams.get('id');
+        
+        if (!postId) {
+            window.location.href = 'dashboard.html';
+        }
+        
+        // Load user info for avatar
+        fetch('../backend/get_posts.php')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    updateAvatar(data.username, data.profile_photo);
+                }
+            });
+        
+        function updateAvatar(username, profilePhoto) {
+            const initial = username.charAt(0).toUpperCase();
+            const avatarPhoto = document.getElementById('avatarPhoto');
+            const avatarInitial = document.getElementById('avatarInitial');
+            
+            if (profilePhoto) {
+                avatarPhoto.src = profilePhoto;
+                avatarPhoto.style.display = 'block';
+                avatarInitial.style.display = 'none';
+            } else {
+                avatarPhoto.style.display = 'none';
+                avatarInitial.style.display = 'flex';
+                avatarInitial.textContent = initial;
+            }
+        }
+        
+        // Function to delete current image
+        function deleteCurrentImage() {
+            if (confirm('Are you sure you want to delete this image?')) {
+                document.getElementById('delete_image').value = '1';
+                document.getElementById('currentImageContainer').style.display = 'none';
+                document.getElementById('noImageMessage').style.display = 'block';
+                document.getElementById('noImageMessage').textContent = 'Image will be deleted when you update the post';
+            }
+        }
+        
+        // Load post data
+        fetch('../backend/get_posts.php?id=' + postId)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.post) {
+                    document.getElementById('post_id').value = data.post.id;
+                    document.getElementById('title').value = data.post.title;
+                    document.getElementById('content').value = data.post.content;
+                    
+                    // Handle image display
+                    if (data.post.image) {
+                        document.getElementById('current_image').value = data.post.image;
+                        document.getElementById('currentImagePreview').src = data.post.image;
+                        document.getElementById('currentImageContainer').style.display = 'block';
+                    } else {
+                        document.getElementById('noImageMessage').style.display = 'block';
+                    }
+                } else {
+                    window.location.href = 'dashboard.html';
+                }
+            });
+        
+        document.getElementById('editPostForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const messageDiv = document.getElementById('message');
+            
+            fetch('../backend/edit_post_handler.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                messageDiv.style.display = 'block';
+                if (data.success) {
+                    messageDiv.className = 'alert alert-success';
+                    messageDiv.textContent = data.message;
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1000);
+                } else {
+                    messageDiv.className = 'alert alert-error';
+                    messageDiv.textContent = data.message;
+                }
+            })
+            .catch(error => {
+                messageDiv.style.display = 'block';
+                messageDiv.className = 'alert alert-error';
+                messageDiv.textContent = 'An error occurred. Please try again.';
+            });
+        });
+    </script>
+</body>
+</html>

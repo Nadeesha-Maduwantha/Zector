@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Zector</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="auth-form">
+            <h1>Login</h1>
+            
+            <div id="message" class="alert" style="display: none;"></div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username or Email</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+            
+            <p class="auth-link">Don't have an account? <a href="register.html">Register here</a></p>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const messageDiv = document.getElementById('message');
+            
+            fetch('../backend/login_handler.php', {
+                method: 'POST',
+                body: formData,
+                credentials: 'include'
+            })
+            .then(response => response.text())
+            .then(text => {
+                console.log('Login response:', text);
+                try {
+                    const data = JSON.parse(text);
+                    console.log('Parsed data:', data);
+                    if (data.success) {
+                        // Save username and profile photo to localStorage
+                        localStorage.setItem('username', data.username);
+                        localStorage.setItem('profile_photo', data.profile_photo || '');
+                        
+                        messageDiv.style.display = 'block';
+                        messageDiv.className = 'alert alert-success';
+                        messageDiv.textContent = 'Login successful! Redirecting...';
+                        window.location.href = 'dashboard.html';
+                    } else {
+                        messageDiv.style.display = 'block';
+                        messageDiv.className = 'alert alert-error';
+                        messageDiv.textContent = data.message;
+                    }
+                } catch(e) {
+                    console.error('Parse error:', e);
+                    messageDiv.style.display = 'block';
+                    messageDiv.className = 'alert alert-error';
+                    messageDiv.textContent = 'Login error. Please try again.';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                messageDiv.style.display = 'block';
+                messageDiv.className = 'alert alert-error';
+                messageDiv.textContent = 'Connection error. Please try again.';
+            });
+        });
+    </script>
+</body>
+</html>

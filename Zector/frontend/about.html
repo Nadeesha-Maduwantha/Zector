@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Zector</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h2>Zector</h2>
+            </div>
+            
+            <div class="nav-actions" style="margin-left: auto;">
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <a href="login.html" class="nav-btn nav-btn-create" id="loginBtn">Login</a>
+                <a href="account.html" class="user-avatar" id="userAvatar" style="display: none;" title="My Account">
+                    <img id="avatarPhoto" src="" alt="" style="display: none;">
+                    <span id="avatarInitial">N</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="about-main">
+        <div class="container">
+            <div class="about-hero-section">
+                <div class="about-badge">ABOUT ZECTOR</div>
+                <h1 class="about-main-title">Share Your Story,<br>Connect With The World</h1>
+                <p class="about-lead">Welcome to Zector, a modern blogging platform where creativity meets community. Share your thoughts, ideas, and experiences with readers around the globe.</p>
+            </div>
+
+            <div class="about-features">
+                <div class="about-feature-card">
+                    
+                    <h3>Express Yourself</h3>
+                    <p>Create beautiful blog posts with our easy-to-use editor. Add images, format your content, and tell your story your way.</p>
+                </div>
+
+                <div class="about-feature-card">
+                    
+                    <h3>Build Community</h3>
+                    <p>Connect with like-minded readers and writers. Engage through reactions, comments, and discover inspiring content.</p>
+                </div>
+
+                <div class="about-feature-card">
+                    
+                    <h3>Grow Your Audience</h3>
+                    <p>Share your posts, track engagement, and build a following. Whether you're a beginner or expert, Zector helps you reach readers.</p>
+                </div>
+            </div>
+
+            <div class="about-mission">
+                <h2>Our Mission</h2>
+                <p>At Zector, we believe everyone has a unique perspective worth sharing. Our platform empowers writers of all backgrounds to publish their ideas, connect with audiences, and be part of a thriving creative community.</p>
+                <p>We're committed to providing a clean, fast, and user-friendly blogging experience that puts your content first. No distractions, no complexity—just you and your words.</p>
+            </div>
+
+            <div class="about-values">
+                <h2>What We Stand For</h2>
+                <div class="values-grid">
+                    <div class="value-item">
+                        <h4> Simplicity</h4>
+                        <p>Clean design and intuitive features that let you focus on writing.</p>
+                    </div>
+                    <div class="value-item">
+                        <h4> Privacy</h4>
+                        <p>Your data is secure and we respect your privacy always.</p>
+                    </div>
+                    <div class="value-item">
+                        <h4> Quality</h4>
+                        <p>We encourage authentic, well-crafted content that adds value.</p>
+                    </div>
+                    <div class="value-item">
+                        <h4> Innovation</h4>
+                        <p>Continuously improving to give you the best blogging experience.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="about-cta-section">
+                <h2>Ready to Start Writing?</h2>
+                <p>Join thousands of writers sharing their stories on Zector. Create your account and publish your first post today.</p>
+                <div class="cta-buttons">
+                    <a href="register.html" class="btn btn-primary btn-large">Get Started Free</a>
+                    <a href="dashboard.html" class="btn btn-secondary btn-large">Browse Posts</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Zector. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="about_redesigned.html">About</a>
+                <a href="contact.html">Contact</a>
+                <a href="login.html">Login</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Check if user is logged in
+        const username = localStorage.getItem('username');
+        const profilePhoto = localStorage.getItem('profile_photo');
+        
+        if (username) {
+            document.getElementById('loginBtn').style.display = 'none';
+            document.getElementById('userAvatar').style.display = 'flex';
+            document.getElementById('avatarInitial').textContent = username.charAt(0).toUpperCase();
+            
+            if (profilePhoto && profilePhoto !== 'null' && profilePhoto !== '') {
+                document.getElementById('avatarPhoto').src = profilePhoto;
+                document.getElementById('avatarPhoto').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

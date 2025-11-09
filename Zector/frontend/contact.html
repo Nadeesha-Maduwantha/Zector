@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Zector</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h2>Zector</h2>
+            </div>
+            
+            <div class="nav-actions" style="margin-left: auto;">
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <a href="login.html" class="nav-btn nav-btn-create" id="loginBtn">Login</a>
+                <a href="account.html" class="user-avatar" id="userAvatar" style="display: none;" title="My Account">
+                    <img id="avatarPhoto" src="" alt="" style="display: none;">
+                    <span id="avatarInitial">N</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="contact-container">
+            <h1>Get In Touch</h1>
+            <p class="contact-intro">Have a question or feedback? We'd love to hear from you!</p>
+            
+            <div class="contact-content">
+                <div class="contact-form-section">
+                    <h2>Send us a Message</h2>
+                    
+                    <div id="message" class="alert" style="display: none;"></div>
+                    
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Your Name</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <input type="text" id="subject" name="subject" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="messageText">Message</label>
+                            <textarea id="messageText" name="message" rows="8" required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
+                </div>
+                
+                <div class="contact-info-section">
+                    <h2>Contact Information</h2>
+                    
+                    <div class="contact-info-item">
+                        <h3>📧 Email</h3>
+                        <p>support@myblog.com</p>
+                    </div>
+                    
+                    <div class="contact-info-item">
+                        <h3>📱 Phone</h3>
+                        <p>+1 (555) 123-4567</p>
+                    </div>
+                    
+                    <div class="contact-info-item">
+                        <h3>📍 Address</h3>
+                        <p>123 Blog Street<br>
+                        Internet City, WEB 12345<br>
+                        United States</p>
+                    </div>
+                    
+                    <div class="contact-info-item">
+                        <h3>⏰ Hours</h3>
+                        <p>Monday - Friday: 9:00 AM - 6:00 PM<br>
+                        Saturday - Sunday: Closed</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Zector. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
+                <a href="login.html">Login</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const messageDiv = document.getElementById('message');
+            
+            fetch('../backend/contact_handler.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                messageDiv.style.display = 'block';
+                if (data.success) {
+                    messageDiv.className = 'alert alert-success';
+                    messageDiv.textContent = data.message;
+                    document.getElementById('contactForm').reset();
+                } else {
+                    messageDiv.className = 'alert alert-error';
+                    messageDiv.textContent = data.message;
+                }
+            })
+            .catch(error => {
+                messageDiv.style.display = 'block';
+                messageDiv.className = 'alert alert-error';
+                messageDiv.textContent = 'An error occurred. Please try again.';
+            });
+        });
+
+        // Check if user is logged in
+        const username = localStorage.getItem('username');
+        const profilePhoto = localStorage.getItem('profile_photo');
+        
+        if (username) {
+            // Hide login button, show avatar
+            document.getElementById('loginBtn').style.display = 'none';
+            document.getElementById('userAvatar').style.display = 'flex';
+            
+            // Set avatar initial
+            document.getElementById('avatarInitial').textContent = username.charAt(0).toUpperCase();
+            
+            // Set profile photo if exists
+            if (profilePhoto && profilePhoto !== 'null' && profilePhoto !== '') {
+                document.getElementById('avatarPhoto').src = profilePhoto;
+                document.getElementById('avatarPhoto').style.display = 'block';
+                document.getElementById('avatarInitial').style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

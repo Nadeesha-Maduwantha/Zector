@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account - Zector</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h2>Zector</h2>
+            </div>
+            
+            <div class="nav-actions" style="margin-left: auto;">
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <a href="create_post.html" class="nav-btn nav-btn-create">Create Post</a>
+                <a href="account.html" class="user-avatar active" id="userAvatar" title="My Account">
+                    <img id="avatarPhoto" src="" alt="" style="display: none;">
+                    <span id="avatarInitial">N</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="settings-container">
+        <div class="settings-content">
+            <h1 class="settings-title">Account Settings</h1>
+            
+            <!-- Account Statistics -->
+            <div class="settings-section">
+                <div class="section-header">
+                    <h2>Account Overview</h2>
+                </div>
+                <div class="stats-grid-modern">
+                    <div class="stat-item-modern">
+                        <div class="stat-label">Total Posts</div>
+                        <div class="stat-value" id="totalPosts">0</div>
+                    </div>
+                    <div class="stat-item-modern">
+                        <div class="stat-label">Total Likes</div>
+                        <div class="stat-value" id="totalLikes">0</div>
+                    </div>
+                    <div class="stat-item-modern">
+                        <div class="stat-label">Total Dislikes</div>
+                        <div class="stat-value" id="totalDislikes">0</div>
+                    </div>
+                    <div class="stat-item-modern">
+                        <div class="stat-label">Member Since</div>
+                        <div class="stat-value" id="memberSince">-</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Information and Change Password Side by Side -->
+            <div class="settings-section-split">
+                <!-- Profile Information -->
+                <div class="settings-section-half">
+                    <div class="section-header">
+                        <h2>Profile Information</h2>
+                        <button type="submit" form="profileForm" class="btn-save">Save changes</button>
+                    </div>
+                    
+                    <div id="profileMessage" class="alert" style="display: none;"></div>
+                    
+                    <form id="profileForm" enctype="multipart/form-data">
+                        <input type="hidden" id="remove_photo" name="remove_photo" value="0">
+                        
+                        <div class="settings-field">
+                            <label class="field-label">Profile Photo</label>
+                            <div class="profile-photo-container">
+                                <img id="profilePhotoPreview" src="../uploads/profiles/default-avatar.png" alt="Profile Photo" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22150%22 height=%22150%22%3E%3Crect width=%22150%22 height=%22150%22 fill=%22%2310b981%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 font-size=%2260%22 fill=%22white%22 text-anchor=%22middle%22 dy=%22.3em%22%3E?%3C/text%3E%3C/svg%3E'">
+                                <div class="photo-actions-modern">
+                                    <label for="new_profile_photo" class="btn-icon-action">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M13.5 1a1.5 1.5 0 0 1 1.5 1.5v11a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 13.5v-11A1.5 1.5 0 0 1 2.5 1h11zm0 1h-11a.5.5 0 0 0-.5.5v11a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5v-11a.5.5 0 0 0-.5-.5z"/><path d="M10.5 5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zM14 13.5v-1L11 9.5 8.5 12 6 9.5 2 13.5v.5h12v-.5z"/></svg>
+                                        Change
+                                    </label>
+                                    <input type="file" id="new_profile_photo" name="profile_photo" accept="image/jpeg,image/png,image/jpg" style="display: none;">
+                                    <button type="button" onclick="removeProfilePhoto()" class="btn-icon-action btn-danger-text">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg>
+                                        Remove
+                                    </button>
+                                </div>
+                            </div>
+                            <small class="field-hint">Size: 150x150px • Max: 2MB • Format: JPG, PNG</small>
+                        </div>
+
+                        <div class="settings-field" style="margin-top: 20px;">
+                            <label for="username" class="field-label">Username</label>
+                            <input type="text" id="username" name="username" class="field-input" required>
+                        </div>
+                        
+                        <div class="settings-field" style="margin-top: 16px;">
+                            <label for="email" class="field-label">Email</label>
+                            <input type="email" id="email" name="email" class="field-input" required>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Change Password -->
+                <div class="settings-section-half">
+                    <div class="section-header">
+                        <h2>Change Password</h2>
+                        <button type="submit" form="passwordForm" class="btn-save">Update password</button>
+                    </div>
+                    
+                    <div id="passwordMessage" class="alert" style="display: none;"></div>
+                    
+                    <form id="passwordForm">
+                        <div class="settings-field">
+                            <label for="current_password" class="field-label">Current Password</label>
+                            <input type="password" id="current_password" name="current_password" class="field-input" required>
+                        </div>
+                        
+                        <div class="settings-field" style="margin-top: 16px;">
+                            <label for="new_password" class="field-label">New Password</label>
+                            <input type="password" id="new_password" name="new_password" class="field-input" required minlength="6">
+                        </div>
+                        
+                        <div class="settings-field" style="margin-top: 16px;">
+                            <label for="confirm_password" class="field-label">Confirm New Password</label>
+                            <input type="password" id="confirm_password" name="confirm_password" class="field-input" required minlength="6">
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- My Blog Posts -->
+            <div class="settings-section">
+                <div class="section-header">
+                    <h2>My Blog Posts</h2>
+                </div>
+                <div id="userPostsContainer" class="user-posts-grid">
+                    <p class="loading-text">Loading your posts...</p>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="settings-section">
+                <div class="action-buttons-group">
+                    <button onclick="logout()" class="btn-logout">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+                            <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                        </svg>
+                        Logout
+                    </button>
+                    
+                    <button onclick="deleteAccount()" class="btn-danger-action">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                        </svg>
+                        Delete Account
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        checkAuth();
+        loadAccountData();
+        loadUserPosts(); // Load user's blog posts
+
+        function loadAccountData() {
+            // Load user stats and info
+            fetch('../backend/get_account_info.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update avatar
+                        updateAvatar(data.user.username, data.user.profile_photo);
+                        
+                        // Update profile form
+                        document.getElementById('username').value = data.user.username;
+                        document.getElementById('email').value = data.user.email;
+                        
+                        // Update profile photo
+                        if (data.user.profile_photo) {
+                            document.getElementById('profilePhotoPreview').src = data.user.profile_photo;
+                        }
+                        
+                        // Update stats
+                        document.getElementById('totalPosts').textContent = data.stats.total_posts;
+                        document.getElementById('totalLikes').textContent = data.stats.total_likes;
+                        document.getElementById('totalDislikes').textContent = data.stats.total_dislikes;
+                        
+                        const memberDate = new Date(data.user.created_at);
+                        document.getElementById('memberSince').textContent = memberDate.toLocaleDateString('en-US', { 
+                            month: 'short', 
+                            year: 'numeric' 
+                        });
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Load user's blog posts
+        function loadUserPosts() {
+            fetch('../backend/get_posts.php?user_posts=true', {
+                credentials: 'include'
+            })
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById('userPostsContainer');
+                
+                if (data.success && data.posts.length > 0) {
+                    container.innerHTML = data.posts.map(post => `
+                        <div class="user-post-item">
+                            <div class="post-title-text">${post.title}</div>
+                            <div class="post-actions-buttons">
+                                <a href="view_post.html?id=${post.id}" class="btn-post-view">
+                                    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                                        <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+                                        <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+                                    </svg>
+                                    View
+                                </a>
+                                <a href="edit_post.html?id=${post.id}" class="btn-post-edit">
+                                    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                                        <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                                    </svg>
+                                    Edit
+                                </a>
+                                <button onclick="deletePost(${post.id})" class="btn-post-delete">
+                                    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                    </svg>
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<p class="no-posts-text">You haven\'t created any blog posts yet. <a href="create_post.html">Create your first post!</a></p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('userPostsContainer').innerHTML = '<p class="error-text">Failed to load posts.</p>';
+            });
+        }
+
+        // Delete post function
+        function deletePost(postId) {
+            if (confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
+                fetch('../backend/delete_post_handler.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    credentials: 'include',
+                    body: 'post_id=' + postId
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Post deleted successfully!');
+                        loadUserPosts(); // Reload the posts list
+                        loadAccountData(); // Refresh stats
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to delete post.');
+                });
+            }
+        }
+
+        function updateAvatar(username, profilePhoto) {
+            const initial = username.charAt(0).toUpperCase();
+            const avatarPhoto = document.getElementById('avatarPhoto');
+            const avatarInitial = document.getElementById('avatarInitial');
+            
+            if (profilePhoto) {
+                avatarPhoto.src = profilePhoto;
+                avatarPhoto.style.display = 'block';
+                avatarInitial.style.display = 'none';
+            } else {
+                avatarPhoto.style.display = 'none';
+                avatarInitial.style.display = 'flex';
+                avatarInitial.textContent = initial;
+            }
+        }
+
+        // Preview new profile photo
+        document.getElementById('new_profile_photo').addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profilePhotoPreview').src = e.target.result;
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+
+        // Remove profile photo
+        function removeProfilePhoto() {
+            if (confirm('Are you sure you want to remove your profile photo?')) {
+                document.getElementById('remove_photo').value = '1';
+                document.getElementById('profilePhotoPreview').src = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22150%22 height=%22150%22%3E%3Crect width=%22150%22 height=%22150%22 fill=%22%23667eea%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 font-size=%2260%22 fill=%22white%22 text-anchor=%22middle%22 dy=%22.3em%22%3E?%3C/text%3E%3C/svg%3E';
+            }
+        }
+
+        // Update Profile
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            // Append the profile photo file if selected
+            const photoFile = document.getElementById('new_profile_photo').files[0];
+            if (photoFile) {
+                formData.append('profile_photo', photoFile);
+            }
+            
+            const messageDiv = document.getElementById('profileMessage');
+            
+            fetch('../backend/update_profile.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                messageDiv.style.display = 'block';
+                if (data.success) {
+                    messageDiv.className = 'alert alert-success';
+                    messageDiv.textContent = data.message;
+                    document.getElementById('remove_photo').value = '0';
+                    loadAccountData(); // Reload to show updated photo
+                } else {
+                    messageDiv.className = 'alert alert-error';
+                    messageDiv.textContent = data.message;
+                }
+            })
+            .catch(error => {
+                messageDiv.style.display = 'block';
+                messageDiv.className = 'alert alert-error';
+                messageDiv.textContent = 'An error occurred. Please try again.';
+            });
+        });
+
+        // Change Password
+        document.getElementById('passwordForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const newPassword = document.getElementById('new_password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+            const messageDiv = document.getElementById('passwordMessage');
+            
+            if (newPassword !== confirmPassword) {
+                messageDiv.style.display = 'block';
+                messageDiv.className = 'alert alert-error';
+                messageDiv.textContent = 'New passwords do not match!';
+                return;
+            }
+            
+            const formData = new FormData(this);
+            
+            fetch('../backend/change_password.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                messageDiv.style.display = 'block';
+                if (data.success) {
+                    messageDiv.className = 'alert alert-success';
+                    messageDiv.textContent = data.message;
+                    document.getElementById('passwordForm').reset();
+                } else {
+                    messageDiv.className = 'alert alert-error';
+                    messageDiv.textContent = data.message;
+                }
+            })
+            .catch(error => {
+                messageDiv.style.display = 'block';
+                messageDiv.className = 'alert alert-error';
+                messageDiv.textContent = 'An error occurred. Please try again.';
+            });
+        });
+
+        // Delete Account
+        function deleteAccount() {
+            if (confirm('Are you absolutely sure you want to delete your account? This action cannot be undone and all your posts will be deleted.')) {
+                if (confirm('This is your last chance. Click OK to permanently delete your account.')) {
+                    fetch('../backend/delete_account.php', {
+                        method: 'POST'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert(data.message);
+                            window.location.href = 'index.html';
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(error => {
+                        alert('An error occurred. Please try again.');
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+</html>

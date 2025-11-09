@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Post - Zector</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h2>Zector</h2>
+            </div>
+            
+            <div class="nav-actions" style="margin-left: auto;">
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <a href="create_post.html" class="nav-btn nav-btn-create">Create Post</a>
+                <a href="account.html" class="user-avatar" id="userAvatar" title="My Account">
+                    <img id="avatarPhoto" src="" alt="" style="display: none;">
+                    <span id="avatarInitial">N</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="form-container">
+            <h1>Create New Post</h1>
+            
+            <div id="message" class="alert" style="display: none;"></div>
+            
+            <form id="createPostForm" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" name="title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="content">Content</label>
+                    <textarea id="content" name="content" rows="10" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="image">Image (optional)</label>
+                    <input type="file" id="image" name="image" accept="image/*">
+                    <small>Supported formats: JPG, PNG, GIF (Max 5MB)</small>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Publish Post</button>
+                    <a href="dashboard.html" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+    <script>
+        checkAuth();
+        
+        // Load user info for avatar
+        fetch('../backend/get_posts.php')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    updateAvatar(data.username, data.profile_photo);
+                }
+            });
+        
+        function updateAvatar(username, profilePhoto) {
+            const initial = username.charAt(0).toUpperCase();
+            const avatarPhoto = document.getElementById('avatarPhoto');
+            const avatarInitial = document.getElementById('avatarInitial');
+            
+            if (profilePhoto) {
+                avatarPhoto.src = profilePhoto;
+                avatarPhoto.style.display = 'block';
+                avatarInitial.style.display = 'none';
+            } else {
+                avatarPhoto.style.display = 'none';
+                avatarInitial.style.display = 'flex';
+                avatarInitial.textContent = initial;
+            }
+        }
+        
+        document.getElementById('createPostForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const messageDiv = document.getElementById('message');
+            
+            fetch('../backend/create_post_handler.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                messageDiv.style.display = 'block';
+                if (data.success) {
+                    messageDiv.className = 'alert alert-success';
+                    messageDiv.textContent = data.message;
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1000);
+                } else {
+                    messageDiv.className = 'alert alert-error';
+                    messageDiv.textContent = data.message;
+                }
+            })
+            .catch(error => {
+                messageDiv.style.display = 'block';
+                messageDiv.className = 'alert alert-error';
+                messageDiv.textContent = 'An error occurred. Please try again.';
+            });
+        });
+    </script>
+</body>
+</html>

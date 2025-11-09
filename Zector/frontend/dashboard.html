@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Zector</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h2>Zector</h2>
+            </div>
+            
+            <div class="nav-search">
+                <input type="text" id="searchInput" placeholder="What are you looking for?" class="nav-search-input">
+                <button class="nav-search-btn">🔍</button>
+            </div>
+            
+            <div class="nav-actions">
+                <div class="filter-dropdown">
+                    <select id="sortFilter" class="nav-filter-select">
+                        <option value="newest">Newest</option>
+                        <option value="oldest">Oldest</option>
+                        <option value="most_liked">Most Liked</option>
+                        <option value="my_posts">My Posts</option>
+                    </select>
+                </div>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <a href="create_post.html" class="nav-btn nav-btn-create">Create Post</a>
+                <a href="account.html" class="user-avatar" id="userAvatar" title="My Account">
+                    <img id="avatarPhoto" src="" alt="" style="display: none;">
+                    <span id="avatarInitial">N</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        
+        <h1>All Blog Posts</h1>
+        
+        <div id="postsContainer">
+            <div class="loading">Loading posts...</div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Zector. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
+                <a href="account.html">Account</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Check if user is logged in
+        console.log('Dashboard loaded');
+        checkAuth();
+        
+        let allPosts = [];
+        let currentUserId = null;
+        
+        // Load posts
+        loadPosts();
+        
+        // Search and filter event listeners
+        document.getElementById('searchInput').addEventListener('input', filterPosts);
+        document.getElementById('sortFilter').addEventListener('change', filterPosts);
+        
+        function loadPosts() {
+            fetch('../backend/get_posts.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update avatar
+                        updateAvatar(data.username, data.profile_photo);
+                        allPosts = data.posts;
+                        currentUserId = data.user_id;
+                        filterPosts();
+                    } else {
+                        window.location.href = 'login.html';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+        
+        function filterPosts() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const sortOption = document.getElementById('sortFilter').value;
+            
+            // Filter posts by search term
+            let filteredPosts = allPosts.filter(post => {
+                const titleMatch = post.title.toLowerCase().includes(searchTerm);
+                const contentMatch = post.content.toLowerCase().includes(searchTerm);
+                const authorMatch = post.username.toLowerCase().includes(searchTerm);
+                return titleMatch || contentMatch || authorMatch;
+            });
+            
+            // Filter by "My Posts Only"
+            if (sortOption === 'my_posts') {
+                filteredPosts = filteredPosts.filter(post => post.user_id == currentUserId);
+            }
+            
+            // Sort posts
+            filteredPosts.sort((a, b) => {
+                switch(sortOption) {
+                    case 'oldest':
+                        return new Date(a.created_at) - new Date(b.created_at);
+                    case 'most_liked':
+                        return (b.likes - b.dislikes) - (a.likes - a.dislikes);
+                    case 'newest':
+                    default:
+                        return new Date(b.created_at) - new Date(a.created_at);
+                }
+            });
+            
+            displayPosts(filteredPosts, currentUserId);
+        }
+        
+        function updateAvatar(username, profilePhoto) {
+            const initial = username.charAt(0).toUpperCase();
+            const avatarPhoto = document.getElementById('avatarPhoto');
+            const avatarInitial = document.getElementById('avatarInitial');
+            
+            if (profilePhoto) {
+                avatarPhoto.src = profilePhoto;
+                avatarPhoto.style.display = 'block';
+                avatarInitial.style.display = 'none';
+            } else {
+                avatarPhoto.style.display = 'none';
+                avatarInitial.style.display = 'flex';
+                avatarInitial.textContent = initial;
+            }
+        }
+        
+        function displayPosts(posts, currentUserId) {
+            const container = document.getElementById('postsContainer');
+            const searchTerm = document.getElementById('searchInput').value;
+            
+            if (posts.length === 0) {
+                if (searchTerm || document.getElementById('sortFilter').value === 'my_posts') {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <p>No posts found matching your search criteria.</p>
+                            <button onclick="clearSearch()" class="btn btn-secondary">Clear Search</button>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <p>No blog posts yet. Be the first to create one!</p>
+                            <a href="create_post.html" class="btn btn-primary">Create Post</a>
+                        </div>
+                    `;
+                }
+                return;
+            }
+            
+            let html = '<div class="posts-grid">';
+            posts.forEach(post => {
+                const isOwner = post.user_id == currentUserId;
+                const likeActive = post.user_reaction === 'like' ? 'active' : '';
+                const dislikeActive = post.user_reaction === 'dislike' ? 'active' : '';
+                const profilePhoto = post.profile_photo || '';
+                
+                html += `
+                    <div class="post-card" onclick="window.location.href='view_post.html?id=${post.id}'">
+                        ${post.image ? `<div class="post-image"><img src="${post.image}" alt="${escapeHtml(post.title)}"></div>` : `<div class="post-image"><div style="width:100%;height:100%;background:linear-gradient(135deg, #10b981 0%, #059669 100%);display:flex;align-items:center;justify-content:center;color:white;font-size:48px;font-weight:bold;">${escapeHtml(post.title.charAt(0).toUpperCase())}</div></div>`}
+                        
+                        <div class="post-card-body">
+                            <a href="view_post.html?id=${post.id}" class="post-title-link" onclick="event.stopPropagation()">
+                                <h3>${escapeHtml(post.title)}</h3>
+                            </a>
+                            
+                            <div class="post-meta">
+                                <div class="post-views">
+                                    <span>👁</span>
+                                    <span>${post.likes + post.dislikes}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="post-content">
+                                <p>${escapeHtml(post.content)}</p>
+                            </div>
+                            
+                            <div class="post-footer">
+                                <div class="post-author-info">
+                                    <img src="${profilePhoto || 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22 viewBox=%220 0 100 100%22%3E%3Ccircle cx=%2250%22 cy=%2250%22 r=%2250%22 fill=%22%2310b981%22/%3E%3Ctext x=%2250%22 y=%2258%22 font-size=%2245%22 fill=%22white%22 text-anchor=%22middle%22 font-family=%22Arial%22%3E${escapeHtml(post.username.charAt(0).toUpperCase())}%3C/text%3E%3C/svg%3E'}" 
+                                         alt="${escapeHtml(post.username)}" 
+                                         class="post-author-photo">
+                                    <span class="post-author">${escapeHtml(post.username)}</span>
+                                </div>
+                                
+                                <div class="post-reactions">
+                                    <button onclick="event.stopPropagation(); reactToPost(${post.id}, 'like')" class="reaction-btn ${likeActive}">
+                                        👍 ${post.likes}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+        
+        function reactToPost(postId, reaction) {
+            const formData = new FormData();
+            formData.append('post_id', postId);
+            formData.append('reaction', reaction);
+            
+            fetch('../backend/react_handler.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    loadPosts();
+                }
+            });
+        }
+        
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('sortFilter').value = 'newest';
+            filterPosts();
+        }
+        
+        function deletePost(postId) {
+            if (confirm('Are you sure you want to delete this post?')) {
+                fetch('../backend/delete_post_handler.php?id=' + postId)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            loadPosts();
+                        }
+                    });
+            }
+        }
+    </script>
+</body>
+</html>
